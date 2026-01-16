@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bible Support</title>
+
+  <!-- PWA -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#22c55e">
+
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+  <!-- OneSignal SDK -->
+  <script src="https://cdn.onesignal.com/sdks/OneSignalSDK.js" async></script>
+  <script>
+    window.OneSignal = window.OneSignal || [];
+    OneSignal.push(function () {
+      OneSignal.init({
+        appId: "YOUR_ONESIGNAL_APP_ID_HERE"
+      });
+    });
+  </script>
+
+  <style>
+    * {
+      box-sizing: border-box
+    }
+
+    body {
+      margin: 0;
+      font-family: Poppins, sans-serif;
+      color: white;
+      min-height: 100vh;
+      padding: 16px;
+
+      background-image: url("Night sky with Trees image.jpg");
+      /* palitan sa actual filename mo */
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: cover;
+      background-attachment: fixed;
+    }
+
+
+    .app {
+      max-width: 390px;
+      margin: auto;
+    }
+
+    .header {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+
+    .header-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 18px;
+      font-weight: 600;
+      line-height: 1.2;
+    }
+
+    .emoji {
+      font-size: 22px;
+      line-height: 1;
+    }
+
+    .sub {
+      opacity: .7;
+      font-size: 13px;
+      margin-bottom: 16px;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, .06);
+      border-radius: 18px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+
+    .title {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .option {
+      background: rgba(255, 255, 255, .08);
+      padding: 12px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      transition: .2s;
+    }
+
+    .option:hover {
+      background: rgba(255, 255, 255, .15)
+    }
+
+    .option.active {
+      background: #22c55e;
+      color: #022c22
+    }
+
+    .btn {
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 14px;
+      background: #22c55e;
+      color: #022c22;
+      font-weight: 700;
+      font-size: 15px;
+      cursor: pointer;
+    }
+
+    .btn.secondary {
+      background: transparent;
+      border: 1px solid rgba(255, 255, 255, .2);
+      color: white;
+      margin-top: 10px;
+    }
+
+    .center {
+      text-align: center;
+    }
+
+    .verse {
+      font-size: 18px;
+      line-height: 1.5;
+      margin-bottom: 10px;
+    }
+
+    .ref {
+      opacity: .7;
+      font-size: 13px;
+    }
+
+    .hidden {
+      display: none
+    }
+
+    .top-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .back-btn {
+      background: rgba(255, 255, 255, .1);
+      border: none;
+      border-radius: 10px;
+      padding: 8px 12px;
+      color: white;
+      font-size: 18px;
+      cursor: pointer;
+    }
+
+    /* === VERSE CARD ANIMATION === */
+    .verse-card {
+      opacity: 0;
+      transform: translateY(20px) scale(0.98);
+      animation: verseReveal 0.6s ease forwards;
+    }
+
+    @keyframes verseReveal {
+      0% {
+        opacity: 0;
+        transform: translateY(20px) scale(0.98);
+        box-shadow: 0 0 0 rgba(34, 197, 94, 0);
+      }
+
+      60% {
+        opacity: 1;
+        transform: translateY(-4px) scale(1.02);
+        box-shadow: 0 0 20px rgba(34, 197, 94, 0.35);
+      }
+
+      100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+        box-shadow: 0 0 12px rgba(34, 197, 94, 0.2);
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="app">
+
+    <!-- SCREEN 1 -->
+    <div id="screenSelect">
+      <div class="header">📖 Bible Support</div>
+      <div class="sub">Find strength in God's Word, 7 Days Reminder and God's Word Meditation.</div>
+
+      <div class="card">
+        <div class="title">How are you feeling?</div>
+
+        <div class="grid">
+          <div class="option" data-type="Anxiety">😰 Anxiety</div>
+          <div class="option" data-type="Sad">😔 Sad</div>
+          <div class="option" data-type="Anger">😡 Anger</div>
+          <div class="option" data-type="Financial">💸 Financial</div>
+          <div class="option" data-type="Unsure">🤔 Unsure</div>
+          <div class="option" data-type="Faith">🙏 Faith</div>
+      </div>
+    </div>
+      <button class="btn secondary" id="notifyBtn">Enable Daily Reminder</button>
+      <button class="btn" id="startBtn">Start 7-Day Support</button>
+    </div>
+
+    <!-- SCREEN 2 -->
+    <div id="screenDay" class="hidden">
+
+      <div class="top-row">
+        <button class="back-btn" id="backBtn">←</button>
+        <div class="header-title">
+          <span class="emoji" id="emojiIcon">😰</span>
+          <span id="struggleTitle">Anxiety</span><br>
+          <small>Day <span id="dayNum"></span> of 7</small>
+        </div>
+      </div>
+
+
+      <div class="card center verse-card" id="verseCard">
+        <div class="verse" id="verseText"></div>
+        <div class="ref" id="verseRef"></div>
+      </div>
+
+
+      <button class="btn" id="nextBtn">Next</button>
+    </div>
+
+  </div>
+
+  <script>
+
+    const emojiMap = {
+      Anxiety: "😰",
+      Sad: "😔",
+      Anger: "😡",
+      Financial: "💸",
+      Faith: "🙏",
+      Unsure: "🤔"
+    };
+
+    // Register Service Worker
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("service-worker.js")
+        .then(() => console.log("Service Worker registered"))
+        .catch(err => console.log("SW error", err));
+    }
+
+    const options = document.querySelectorAll(".option");
+    const startBtn = document.getElementById("startBtn");
+    const notifyBtn = document.getElementById("notifyBtn");
+
+    const screenSelect = document.getElementById("screenSelect");
+    const screenDay = document.getElementById("screenDay");
+
+    const struggleTitle = document.getElementById("struggleTitle");
+    const dayNum = document.getElementById("dayNum");
+    const verseText = document.getElementById("verseText");
+    const verseRef = document.getElementById("verseRef");
+    const verseCard = document.getElementById("verseCard");
+
+    const nextBtn = document.getElementById("nextBtn");
+    const backBtn = document.getElementById("backBtn");
+
+    let selected = null;
+    let day = 1;
+
+    const verses = {
+      Anxiety: [
+        { text: "Cast all your anxiety on Him because He cares for you.", ref: "1 Peter 5:7" },
+        { text: "Do not be anxious about anything.", ref: "Philippians 4:6" },
+        { text: "When anxiety was great, Your consolation brought joy.", ref: "Psalm 94:19" },
+        { text: "The Lord is my light and my salvation.", ref: "Psalm 27:1" },
+        { text: "Peace I leave with you; My peace I give you.", ref: "John 14:27" },
+        { text: "Be still and know that I am God.", ref: "Psalm 46:10" },
+        { text: "The Lord will fight for you.", ref: "Exodus 14:14" }
+      ],
+      Sad: [
+        { text: "The Lord is close to the brokenhearted.", ref: "Psalm 34:18" },
+        { text: "Weeping may endure for a night, but joy comes in the morning.", ref: "Psalm 30:5" },
+        { text: "He will wipe every tear from their eyes.", ref: "Revelation 21:4" },
+        { text: "Come to Me, all who are weary.", ref: "Matthew 11:28" },
+        { text: "My grace is sufficient for you.", ref: "2 Corinthians 12:9" },
+        { text: "The joy of the Lord is your strength.", ref: "Nehemiah 8:10" },
+        { text: "You are precious in My sight.", ref: "Isaiah 43:4" }
+      ],
+      Anger: [
+        { text: "Be slow to anger.", ref: "James 1:19" },
+        { text: "A gentle answer turns away wrath.", ref: "Proverbs 15:1" },
+        { text: "Do not let the sun go down while you are angry.", ref: "Ephesians 4:26" },
+        { text: "The Lord is gracious and compassionate.", ref: "Psalm 145:8" },
+        { text: "Create in me a clean heart, O God.", ref: "Psalm 51:10" },
+        { text: "Forgive as the Lord forgave you.", ref: "Colossians 3:13" },
+        { text: "Blessed are the peacemakers.", ref: "Matthew 5:9" }
+      ],
+      Financial: [
+        { text: "The Lord is my shepherd, I lack nothing.", ref: "Psalm 23:1" },
+        { text: "God will supply all your needs.", ref: "Philippians 4:19" },
+        { text: "Commit your work to the Lord.", ref: "Proverbs 16:3" },
+        { text: "Seek first the Kingdom of God.", ref: "Matthew 6:33" },
+        { text: "The blessing of the Lord brings wealth.", ref: "Proverbs 10:22" },
+        { text: "Trust in the Lord with all your heart.", ref: "Proverbs 3:5" },
+        { text: "My God shall supply all your needs.", ref: "Philippians 4:19" }
+      ],
+      Faith: [
+        { text: "With God all things are possible.", ref: "Matthew 19:26" },
+        { text: "I can do all things through Christ.", ref: "Philippians 4:13" },
+        { text: "The Lord is my strength.", ref: "Psalm 28:7" },
+        { text: "Walk by faith, not by sight.", ref: "2 Corinthians 5:7" },
+        { text: "The Lord is good to those who wait.", ref: "Lamentations 3:25" },
+        { text: "Blessed is the one who trusts in the Lord.", ref: "Jeremiah 17:7" },
+        { text: "Faith comes by hearing the Word of God.", ref: "Romans 10:17" }
+      ],
+      Unsure: [
+        { text: "Trust in the Lord with all your heart and lean not on your own understanding.", ref: "Proverbs 3:5" },
+        { text: "If any of you lacks wisdom, let him ask of God.", ref: "James 1:5" },
+        { text: "Your word is a lamp to my feet and a light to my path.", ref: "Psalm 119:105" },
+        { text: "In all your ways acknowledge Him, and He shall direct your paths.", ref: "Proverbs 3:6" },
+        { text: "Show me Your ways, O Lord, teach me Your paths.", ref: "Psalm 25:4" },
+        { text: "The steps of a good man are ordered by the Lord.", ref: "Psalm 37:23" },
+        { text: "Be still, and know that I am God.", ref: "Psalm 46:10" }
+      ]
+    };
+
+    options.forEach(opt => {
+      opt.onclick = () => {
+        options.forEach(o => o.classList.remove("active"));
+        opt.classList.add("active");
+        selected = opt.dataset.type;
+      }
+    });
+
+    startBtn.onclick = () => {
+      if (!selected) {
+        alert("Please select how you feel");
+        return;
+      }
+      day = 1;
+      saveState();
+      showDay();
+    };
+
+
+
+    nextBtn.onclick = () => {
+      if (day < 7) {
+        day++;
+        saveState();
+        showDay();
+      }
+    };
+
+    backBtn.onclick = () => {
+      if (day > 1) {
+        day--;
+        saveState();
+        showDay();
+      } else {
+        localStorage.clear();
+        screenDay.classList.add("hidden");
+        screenSelect.classList.remove("hidden");
+      }
+    };
+
+
+    function showDay() {
+      screenSelect.classList.add("hidden");
+      screenDay.classList.remove("hidden");
+
+      struggleTitle.textContent = selected;
+      dayNum.textContent = day;
+      emojiIcon.textContent = emojiMap[selected];
+
+      const v = verses[selected][day - 1];
+      verseText.textContent = `"${v.text}"`;
+      verseRef.textContent = v.ref;
+
+      // re-trigger verse animation
+      verseCard.classList.remove("verse-card");
+      void verseCard.offsetWidth; // force reflow
+      verseCard.classList.add("verse-card");
+    }
+
+
+    // OneSignal Permission Trigger
+    notifyBtn.onclick = () => {
+      OneSignal.push(function () {
+        OneSignal.showSlidedownPrompt();
+      });
+    };
+
+    function saveState() {
+      localStorage.setItem("bible_selected", selected);
+      localStorage.setItem("bible_day", day);
+    }
+
+    window.onload = () => {
+      const savedSelected = localStorage.getItem("bible_selected");
+      const savedDay = localStorage.getItem("bible_day");
+
+      if (savedSelected && savedDay) {
+        selected = savedSelected;
+        day = parseInt(savedDay);
+        showDay();
+      }
+    };
+
+  </script>
+
+</body>
+
+</html>
