@@ -6,6 +6,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Bible Support</title>
 
+  <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+  <script>
+    window.OneSignalDeferred = window.OneSignalDeferred || [];
+    OneSignalDeferred.push(async function(OneSignal) {
+      await OneSignal.init({
+        appId: "d979f6f9-0397-431a-90f0-d01cf7b89007",
+      });
+    });
+  </script>
   <!-- PWA -->
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#22c55e">
@@ -26,7 +35,7 @@
 
   <style>
     * {
-      box-sizing: border-box;
+      box-sizing: border-box
     }
 
     body {
@@ -43,7 +52,6 @@
       background-size: cover;
       background-attachment: fixed;
     }
-
     .app {
       max-width: 390px;
       margin: auto;
@@ -222,8 +230,8 @@
           <div class="option" data-type="Financial">💸 Financial</div>
           <div class="option" data-type="Unsure">🤔 Unsure</div>
           <div class="option" data-type="Faith">🙏 Faith</div>
+        </div>
       </div>
-    </div>
       <button class="btn secondary" id="notifyBtn">Enable Daily Reminder</button>
       <button class="btn" id="startBtn">Start 7-Day Support</button>
     </div>
@@ -263,13 +271,6 @@
       Unsure: "🤔"
     };
 
-    // Register Service Worker
-    if ("serviceWorker" in navigator) {
-      navigator.serviceWorker.register("service-worker.js")
-        .then(() => console.log("Service Worker registered"))
-        .catch(err => console.log("SW error", err));
-    }
-
     const options = document.querySelectorAll(".option");
     const startBtn = document.getElementById("startBtn");
     const notifyBtn = document.getElementById("notifyBtn");
@@ -285,6 +286,7 @@
 
     const nextBtn = document.getElementById("nextBtn");
     const backBtn = document.getElementById("backBtn");
+    const emojiIcon = document.getElementById("emojiIcon");
 
     let selected = null;
     let day = 1;
@@ -433,6 +435,4 @@
 
 </body>
 
-
 </html>
-
